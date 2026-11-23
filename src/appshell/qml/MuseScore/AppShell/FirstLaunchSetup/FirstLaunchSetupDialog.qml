@@ -163,34 +163,13 @@ StyledDialogView {
             }
 
             FlatButton {
-                id: extraButton
-
-                Layout.alignment: Qt.AlignRight
-
-                visible: root.currentPage ? Boolean(root.currentPage.extraButtonTitle) : false
-                accentButton: true
-
-                text: root.currentPage ? root.currentPage.extraButtonTitle : ""
-
-                navigation.name: "ExtraButton"
-                navigation.panel: buttons.navigationPanel
-                navigation.column: 1
-
-                onClicked: {
-                    if (root.currentPage) {
-                        root.currentPage.extraButtonClicked()
-                    }
-                }
-            }
-
-            FlatButton {
                 id: nextStepButton
 
                 Layout.alignment: Qt.AlignRight
 
                 text: model.canFinish ? qsTrc("appshell/gettingstarted", "Finish")
                                       : qsTrc("global", "Next")
-                accentButton: !extraButton.visible
+                accentButton: true
 
                 navigation.name: "NextButton"
                 navigation.panel: buttons.navigationPanel

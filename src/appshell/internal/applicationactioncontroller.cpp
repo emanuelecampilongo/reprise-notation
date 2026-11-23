@@ -69,8 +69,7 @@ void ApplicationActionController::init()
         interactive()->open("musescore://about/reprise-feedback");
     });
 #ifdef Q_OS_WIN
-    dispatcher()->reg(this, "reprise-check-update", [this]() { checkForRepriseUpdates(true); });
-    dispatcher()->reg(this, "reprise-check-update-on-startup", [this]() { checkForRepriseUpdates(false); });
+    dispatcher()->reg(this, "reprise-check-update-on-startup", [this]() { checkForRepriseUpdates(); });
 #endif
     dispatcher()->reg(this, "about-qt", this, &ApplicationActionController::openAboutQtDialog);
     dispatcher()->reg(this, "about-musicxml", this, &ApplicationActionController::openAboutMusicXMLDialog);
@@ -372,8 +371,8 @@ void ApplicationActionController::revertToFactorySettings()
         static constexpr bool NOTIFY_OTHER_INSTANCES = false;
         configuration()->revertToFactorySettings(KEEP_DEFAULT_SETTINGS, NOTIFY_ABOUT_CHANGES, NOTIFY_OTHER_INSTANCES);
 
-        std::string title = muse::trc("appshell", "Would you like to restart MuseScore Studio now?");
-        std::string question = muse::trc("appshell", "MuseScore Studio needs to be restarted for these changes to take effect.");
+        std::string title = muse::trc("appshell", "Would you like to restart Reprise Notation now?");
+        std::string question = muse::trc("appshell", "Reprise Notation needs to be restarted for these changes to take effect.");
 
         int restartBtn = int(IInteractive::Button::Apply);
         auto promise = interactive()->question(title, question,

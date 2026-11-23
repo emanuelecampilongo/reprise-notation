@@ -50,3 +50,5 @@ Send bug reports, feature suggestions, and proposed code changes to [info@emanue
 Reprise Notation is an independent project by [Emanuele Campilongo](https://emanuelecampilongo.com/), based on the work of the [MuseScore Studio project](https://github.com/musescore/MuseScore) and its contributors. The code is distributed under the [GNU General Public License, version 3](LICENSE.txt).
 
 To build the app, see the [MuseScore Studio developer setup guide](https://github.com/musescore/MuseScore/wiki/Set-up-developer-environment) and the [Reprise Notation MSIX packaging instructions](buildscripts/packaging/Windows/REPRISE-DISTRIBUTION.md).
+
+[Reprise Notation Privacy Policy](PRIVACY.md)

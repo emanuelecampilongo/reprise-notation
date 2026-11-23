@@ -1531,7 +1531,7 @@ void ProjectActionsController::warnCorruptedScoreCannotBeSavedOnCloud(const std:
     IInteractive::Text text;
     text.text = muse::trc("project", "This score has become corrupted and contains errors. "
                                      "You can fix the errors manually, or save the score to your computer "
-                                     "and get help for this issue on MuseScore.org.");
+                                     "and get help for this issue on the Reprise Notation website.");
     text.detailedText = errorText;
 
     IInteractive::ButtonDatas buttons;
@@ -1570,10 +1570,10 @@ bool ProjectActionsController::askIfUserAgreesToSaveCorruptedScoreLocally(const 
     IInteractive::Text text;
     text.text = !canRevert
                 ? muse::trc("project", "You can continue saving it locally, although the file may become unusable. "
-                                       "You can try to fix the errors manually, or get help for this issue on MuseScore.org.")
+                                       "You can try to fix the errors manually, or get help for this issue on the Reprise Notation website.")
                 : muse::trc("project", "You can continue saving it locally, although the file may become unusable. "
                                        "To preserve your score, revert to the last saved version, or fix the errors manually. "
-                                       "You can also get help for this issue on MuseScore.org.");
+                                       "You can also get help for this issue on the Reprise Notation website.");
     text.detailedText = errorText;
 
     IInteractive::ButtonDatas buttons;
@@ -1621,7 +1621,7 @@ void ProjectActionsController::showErrCorruptedScoreCannotBeSaved(const SaveLoca
                         : muse::trc("project", "Your score cannot be uploaded to the cloud");
 
     IInteractive::Text text;
-    text.text = muse::trc("project", "This score is corrupted. You can get help for this issue on MuseScore.org.");
+    text.text = muse::trc("project", "This score is corrupted. You can get help for this issue on the Reprise Notation website.");
     text.detailedText = errorText;
 
     IInteractive::ButtonData getHelpBtn(IInteractive::Button::CustomButton, muse::trc("project", "Get help"));
@@ -1631,7 +1631,7 @@ void ProjectActionsController::showErrCorruptedScoreCannotBeSaved(const SaveLoca
         interactive()->buttonData(IInteractive::Button::Ok)
     }).onResolve(this, [this, getHelpBtn](const IInteractive::Result& res) {
         if (res.isButton(getHelpBtn.btn)) {
-            interactive()->openUrl(configuration()->supportForumUrl());
+            interactive()->openUrl(configuration()->supportUrl());
         }
     });
 }
@@ -1655,8 +1655,8 @@ int ProjectActionsController::warnScoreHasBecomeCorruptedAfterSave(const Ret& re
 {
     const QString errDetailsMessage = QString::fromStdString(ret.toString()).toHtmlEscaped();
 
-    const QString supportForumLink = String("<a href=\"%1\" style=\"text-decoration: none\">MuseScore.org</a>")
-                                     .arg(configuration()->supportForumUrl().toString());
+    const QString supportLink = String("<a href=\"%1\" style=\"text-decoration: none\">Reprise Notation</a>")
+                                     .arg(configuration()->supportUrl().toString());
 
     const std::string title = muse::trc("project/save", "An error occurred while saving your score");
 
@@ -1665,7 +1665,7 @@ int ProjectActionsController::warnScoreHasBecomeCorruptedAfterSave(const Ret& re
                                         "If this message still appears, please save your score as new copy. "
                                         "You can also get help for this issue on %1.<br/><br/>"
                                         "Error details (please cite when asking for support): %2")
-                             .arg(supportForumLink, errDetailsMessage)
+                             .arg(supportLink, errDetailsMessage)
                              .toStdString();
 
     IInteractive::ButtonDatas buttons;
@@ -1783,16 +1783,16 @@ bool ProjectActionsController::askIfUserAgreesToOpenProjectWithIncompatibleVersi
 void ProjectActionsController::warnFileTooNew(const muse::io::path_t& filepath)
 {
     interactive()->error(muse::qtrc("project", "Cannot read file %1").arg(io::toNativeSeparators(filepath).toQString()).toStdString(),
-                         muse::mtrc("project", "This file was saved using a newer version of MuseScore Studio. "
-                                               "Please visit <a href=\"%1\">MuseScore.org</a> to obtain the latest version.")
-                         .arg(u"https://musescore.org").toStdString());
+                         muse::mtrc("project", "This score uses a newer file format than this version of Reprise Notation supports. "
+                                               "Check <a href=\"%1\">Reprise Notation</a> for a newer release.")
+                         .arg(String::fromQString(configuration()->supportUrl().toString())).toStdString());
 }
 
 bool ProjectActionsController::askIfUserAgreesToOpenCorruptedProject(const String& projectName, const std::string& errorText)
 {
     std::string title = muse::mtrc("project", "File “%1” is corrupted").arg(projectName).toStdString();
     IInteractive::Text text;
-    text.text = muse::trc("project", "This file contains errors that could cause MuseScore Studio to malfunction.");
+    text.text = muse::trc("project", "This file contains errors that could cause Reprise Notation to malfunction.");
     text.detailedText = errorText;
 
     IInteractive::ButtonData openAnywayBtn(IInteractive::Button::CustomButton, muse::trc("project", "Open anyway"), true /*accent*/);
@@ -1809,7 +1809,7 @@ void ProjectActionsController::warnProjectCriticallyCorrupted(const String& proj
 {
     std::string title = muse::mtrc("project", "File “%1” is corrupted and cannot be opened").arg(projectName).toStdString();
     IInteractive::Text text;
-    text.text = muse::trc("project", "Get help for this issue on MuseScore.org.");
+    text.text = muse::trc("project", "Get help for this issue on the Reprise Notation website.");
     text.detailedText = errorText;
 
     IInteractive::ButtonData getHelpBtn(IInteractive::Button::CustomButton, muse::trc("project", "Get help"), true /*accent*/);
@@ -1819,7 +1819,7 @@ void ProjectActionsController::warnProjectCriticallyCorrupted(const String& proj
         getHelpBtn
     }, getHelpBtn.btn).onResolve(this, [this, getHelpBtn](const IInteractive::Result& res) {
         if (res.isButton(getHelpBtn.btn)) {
-            interactive()->openUrl(configuration()->supportForumUrl());
+            interactive()->openUrl(configuration()->supportUrl());
         }
     });
 }

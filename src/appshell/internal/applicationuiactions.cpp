@@ -72,13 +72,6 @@ const UiActionList ApplicationUiActions::m_actions = {
              TranslatableString(),
              IconCode::Code::FEEDBACK
              ),
-#ifdef Q_OS_WIN
-    UiAction("reprise-check-update",
-             mu::context::UiCtxAny,
-             mu::context::CTX_ANY,
-             TranslatableString("action", "Check for Reprise Notation updates…")
-             ),
-#endif
     UiAction("about-qt",
              mu::context::UiCtxAny,
              mu::context::CTX_ANY,

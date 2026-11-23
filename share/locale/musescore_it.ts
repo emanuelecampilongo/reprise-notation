@@ -9941,13 +9941,13 @@ Questa azione non eliminerà nessuna delle tue partiture.</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="368"/>
-        <source>Would you like to restart MuseScore Studio now?</source>
-        <translation>Vuoi riavviare MuseScore Studio adesso?</translation>
+        <source>Would you like to restart Reprise Notation now?</source>
+        <translation>Vuoi riavviare Reprise Notation adesso?</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="369"/>
-        <source>MuseScore Studio needs to be restarted for these changes to take effect.</source>
-        <translation>Per rendere effettive queste modifiche MuseScore Studio deve essere riavviato.</translation>
+        <source>Reprise Notation needs to be restarted for these changes to take effect.</source>
+        <translation>Per rendere effettive queste modifiche Reprise Notation deve essere riavviato.</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="374"/>
@@ -10035,8 +10035,8 @@ Questa azione non può essere annullata.</translation>
         <translation>Reprise Notation è un progetto sviluppato da una sola persona, &lt;a href=&quot;%1&quot;&gt;Emanuele Campilongo&lt;/a&gt;.</translation>
     </message>
     <message>
-        <source>&lt;a href=&quot;%1&quot;&gt;Reprise Notation website&lt;/a&gt; · &lt;a href=&quot;%2&quot;&gt;GitHub&lt;/a&gt;</source>
-        <translation>&lt;a href=&quot;%1&quot;&gt;Sito di Reprise Notation&lt;/a&gt; · &lt;a href=&quot;%2&quot;&gt;GitHub&lt;/a&gt;</translation>
+        <source>&lt;a href=&quot;%1&quot;&gt;Reprise Notation website&lt;/a&gt; · &lt;a href=&quot;%2&quot;&gt;GitHub&lt;/a&gt; · &lt;a href=&quot;%3&quot;&gt;Privacy policy&lt;/a&gt;</source>
+        <translation>&lt;a href=&quot;%1&quot;&gt;Sito di Reprise Notation&lt;/a&gt; · &lt;a href=&quot;%2&quot;&gt;GitHub&lt;/a&gt; · &lt;a href=&quot;%3&quot;&gt;Informativa sulla privacy&lt;/a&gt;</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/MuseScore/AppShell/AboutDialog.qml" line="34"/>
@@ -10151,8 +10151,8 @@ Pubblicato con licenza &lt;a href=&quot;%1&quot;&gt;GNU General Public License v
     </message>
     <message>
         <location filename="../../src/appshell/qml/MuseScore/AppShell/FirstLaunchSetup/ThemesPage.qml" line="34"/>
-        <source>Welcome to MuseScore Studio</source>
-        <translation>Benvenuti su MuseScore Studio</translation>
+        <source>Welcome to Reprise Notation</source>
+        <translation>Benvenuti su Reprise Notation</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/MuseScore/AppShell/FirstLaunchSetup/ThemesPage.qml" line="35"/>
@@ -10195,6 +10195,10 @@ Pubblicato con licenza &lt;a href=&quot;%1&quot;&gt;GNU General Public License v
         <location filename="../../src/appshell/qml/MuseScore/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="103"/>
         <source>Are you sure you want to cancel?</source>
         <translation>Sei sicuro di voler cancellare?</translation>
+    </message>
+    <message>
+        <source>You can change these settings later in Preferences.</source>
+        <translation>Puoi cambiare queste impostazioni in seguito nelle Preferenze.</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/MuseScore/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="104"/>
@@ -10699,8 +10703,8 @@ Pubblicato con licenza &lt;a href=&quot;%1&quot;&gt;GNU General Public License v
     </message>
     <message>
         <location filename="../../src/framework/cloud/internal/oauthhttpserverreplyhandler.cpp" line="184"/>
-        <source>Sign in successful! You’re good to go back to MuseScore Studio.</source>
-        <translation>Accesso riuscito! Puoi tornare a MuseScore Studio.</translation>
+        <source>Sign in successful! You’re good to go back to Reprise Notation.</source>
+        <translation>Accesso riuscito! Puoi tornare a Reprise Notation.</translation>
     </message>
 </context>
 <context>
@@ -10720,8 +10724,8 @@ Pubblicato con licenza &lt;a href=&quot;%1&quot;&gt;GNU General Public License v
     </message>
     <message>
         <location filename="../../src/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="39"/>
-        <source>This will create a .zip file with information about your MuseScore Studio setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
-        <translation>Questo creerà un file .zip con informazioni sulla tua configurazione di MuseScore Studio per aiutare gli sviluppatori a diagnosticare eventuali problemi. Puoi controllare il contenuto di questo file prima di inviarlo a qualcuno.</translation>
+        <source>This will create a .zip file with information about your Reprise Notation setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
+        <translation>Questo creerà un file .zip con informazioni sulla tua configurazione di Reprise Notation per aiutare gli sviluppatori a diagnosticare eventuali problemi. Puoi controllare il contenuto di questo file prima di inviarlo a qualcuno.</translation>
     </message>
     <message>
         <location filename="../../src/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="53"/>
@@ -26890,8 +26894,8 @@ Inoltre, Mastering MuseScore offre una communità di musicisti di supporto, con 
     </message>
     <message>
         <location filename="../../src/musesounds/internal/musesamplercheckupdatescenario.cpp" line="70"/>
-        <source>To apply this update, MuseScore Studio will need to close briefly and MuseSounds Manager will open. Your MuseSounds libraries won’t work until the update is complete.</source>
-        <translation>Per applicare l&apos;aggiornamento, MuseScore Studio avrà bisogno di chiudere brevemente e MuseSounds Manager verrà aperto. Le librerie MuseSounds non funzioneranno finchè l&apos;aggiornamento non è completo.</translation>
+        <source>To apply this update, Reprise Notation will need to close briefly and MuseSounds Manager will open. Your MuseSounds libraries won’t work until the update is complete.</source>
+        <translation>Per applicare l&apos;aggiornamento, Reprise Notation avrà bisogno di chiudere brevemente e MuseSounds Manager verrà aperto. Le librerie MuseSounds non funzioneranno finchè l&apos;aggiornamento non è completo.</translation>
     </message>
     <message>
         <location filename="../../src/musesounds/internal/musesamplercheckupdatescenario.cpp" line="74"/>
@@ -26901,8 +26905,8 @@ Inoltre, Mastering MuseScore offre una communità di musicisti di supporto, con 
     </message>
     <message>
         <location filename="../../src/musesounds/internal/musesamplercheckupdatescenario.cpp" line="76"/>
-        <source>To apply this update, MuseScore Studio will need to close briefly and MuseHub will open. Your MuseSounds libraries won’t work until the update is complete.</source>
-        <translation>Per applicare l&apos;aggiornamento, MuseScore Studio avrà bisogno di chiudere brevemente e MuseHub verrà aperto. Le librerie MuseSounds non funzioneranno finchè l&apos;aggiornamento non è completo.</translation>
+        <source>To apply this update, Reprise Notation will need to close briefly and MuseHub will open. Your MuseSounds libraries won’t work until the update is complete.</source>
+        <translation>Per applicare l&apos;aggiornamento, Reprise Notation avrà bisogno di chiudere brevemente e MuseHub verrà aperto. Le librerie MuseSounds non funzioneranno finchè l&apos;aggiornamento non è completo.</translation>
     </message>
     <message>
         <location filename="../../src/musesounds/internal/musesamplercheckupdatescenario.cpp" line="80"/>
@@ -35033,8 +35037,8 @@ fallita: %2</translation>
     </message>
     <message>
         <location filename="../../src/notationscene/internal/notationactioncontroller.cpp" line="2361"/>
-        <source>This file contains errors that could cause MuseScore Studio to malfunction. Please fix those at the earliest, to prevent crashes and further corruptions.</source>
-        <translation>Questo file contiene errori che potrebbero causare il malfunzionamento di MuseScore Studio. Per favore correggili al più presto, per prevenire crash ed ulteriori corruzioni.</translation>
+        <source>This file contains errors that could cause Reprise Notation to malfunction. Please fix those at the earliest, to prevent crashes and further corruptions.</source>
+        <translation>Questo file contiene errori che potrebbero causare il malfunzionamento di Reprise Notation. Per favore correggili al più presto, per prevenire crash ed ulteriori corruzioni.</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="107"/>
@@ -35158,8 +35162,8 @@ fallita: %2</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1795"/>
-        <source>This file contains errors that could cause MuseScore Studio to malfunction.</source>
-        <translation>Questo file contiene errori che potrebbero causare il malfunzionamento di MuseScore Studio.</translation>
+        <source>This file contains errors that could cause Reprise Notation to malfunction.</source>
+        <translation>Questo file contiene errori che potrebbero causare il malfunzionamento di Reprise Notation.</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1810"/>

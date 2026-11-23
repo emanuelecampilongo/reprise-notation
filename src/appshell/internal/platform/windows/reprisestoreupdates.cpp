@@ -98,9 +98,8 @@ void checkStoreForUpdates(QObject* owner, HWND window, Callback finished)
 }
 }
 
-void ApplicationActionController::checkForRepriseUpdates(bool manual)
+void ApplicationActionController::checkForRepriseUpdates()
 {
-    m_repriseUpdateCheckManual |= manual;
     if (m_checkingRepriseUpdates) {
         return;
     }
@@ -109,46 +108,27 @@ void ApplicationActionController::checkForRepriseUpdates(bool manual)
     const auto window = qWindow();
     const auto hwnd = window ? reinterpret_cast<HWND>(window->winId()) : nullptr;
     checkStoreForUpdates(this, hwnd, [this](StoreUpdateStatus status) {
-        const bool reportResult = m_repriseUpdateCheckManual;
-        m_repriseUpdateCheckManual = false;
-        if (!reportResult && status != StoreUpdateStatus::Available) {
+        if (status != StoreUpdateStatus::Available) {
             m_checkingRepriseUpdates = false;
             return;
         }
 
         const auto title = trc("appshell/store", "Reprise Notation updates");
-        std::string message;
-        switch (status) {
-        case StoreUpdateStatus::Available:
-            message = trc("appshell/store", "A new version of Reprise Notation is available. You can install it through Microsoft Store.");
-            break;
-        case StoreUpdateStatus::UpToDate:
-            message = trc("appshell/store", "Microsoft Store has no updates for Reprise Notation.");
-            break;
-        case StoreUpdateStatus::Unpackaged:
-            message = trc("appshell/store", "This build is outside Microsoft Store. Update the Store edition through Microsoft Store.");
-            break;
-        case StoreUpdateStatus::Unavailable:
-            message = trc("appshell/store", "Reprise Notation could not check for updates. You can check directly in Microsoft Store.");
-            break;
-        }
-
+        const auto message = trc("appshell/store", "A new version of Reprise Notation is available. You can install it through Microsoft Store.");
         using Button = IInteractive::Button;
-        const auto showStore = Button::Open;
-        IInteractive::ButtonDatas buttons = { interactive()->buttonData(Button::Ok) };
-        if (status != StoreUpdateStatus::UpToDate) {
-            buttons.emplace_back(showStore, trc("appshell/store", "Open Microsoft Store"));
-        }
+        const IInteractive::ButtonDatas buttons = {
+            interactive()->buttonData(Button::Ok),
+            { Button::Open, trc("appshell/store", "Open Microsoft Store") }
+        };
+
         interactive()->info(title, IInteractive::Text(message), buttons, int(Button::Ok))
-        .onResolve(this, [this, showStore](const IInteractive::Result& result) {
-            m_repriseUpdateCheckManual = false;
+        .onResolve(this, [this](const IInteractive::Result& result) {
             m_checkingRepriseUpdates = false;
-            if (result.isButton(showStore)) {
+            if (result.isButton(Button::Open)) {
                 interactive()->openUrl(std::string("ms-windows-store://pdp/?ProductId=9P6V1L676P93"));
             }
         })
         .onReject(this, [this](int, const std::string&) {
-            m_repriseUpdateCheckManual = false;
             m_checkingRepriseUpdates = false;
         });
     });

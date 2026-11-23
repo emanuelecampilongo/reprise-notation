@@ -458,9 +458,6 @@ MenuItem* AppMenuModel::makeHelpMenu(bool addDiagnosticsSubMenu)
     helpItems << makeMenuItem("about-musescore", MenuItemRole::AboutRole);
     helpItems << makeMenuItem("reprise-feedback");
 
-#ifdef Q_OS_WIN
-    helpItems << makeMenuItem("reprise-check-update");
-#endif
     helpItems << makeSeparator();
     helpItems << makeMenu(TranslatableString("appshell/menu/help", "MuseScore Studio resources"), {
         makeMenuItem("online-handbook"),

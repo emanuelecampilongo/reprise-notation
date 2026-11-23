@@ -653,16 +653,9 @@ void ProjectConfiguration::setShouldDestinationFolderBeOpenedOnExport(bool shoul
     settings()->setSharedValue(SHOULD_DESTINATION_FOLDER_BE_OPENED_ON_EXPORT, Val(shouldDestinationFolderBeOpenedOnExport));
 }
 
-QUrl ProjectConfiguration::supportForumUrl() const
+QUrl ProjectConfiguration::supportUrl() const
 {
-    if (languagesService()->currentLanguage().code.startsWith("en")) {
-        // The English support forum
-        return QUrl("https://musescore.org/forum/6");
-    }
-
-    // The general forum page, where the support forum is linked at the top
-    // (except in English; there you have the Announcements forum)
-    return QUrl("https://musescore.org/forum");
+    return QUrl("https://emanuelecampilongo.com/software/reprise-notation");
 }
 
 QUrl ProjectConfiguration::dotComBugReportUrl() const

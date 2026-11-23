@@ -30,7 +30,6 @@
 #include "accessibility/iaccessibilityconfiguration.h"
 #include "notation/inotationconfiguration.h"
 #include "cloud/icloudconfiguration.h"
-#include "languages/ilanguagesservice.h"
 
 #include "../iprojectconfiguration.h"
 
@@ -42,7 +41,6 @@ class ProjectConfiguration : public IProjectConfiguration, public muse::Contexta
     muse::GlobalInject<muse::cloud::ICloudConfiguration> cloudConfiguration;
     muse::GlobalInject<muse::io::IFileSystem> fileSystem;
     muse::GlobalInject<muse::accessibility::IAccessibilityConfiguration> accessibilityConfiguration;
-    muse::GlobalInject<muse::languages::ILanguagesService> languagesService;
 
 public:
     ProjectConfiguration(const muse::modularity::ContextPtr& iocCtx);
@@ -135,7 +133,7 @@ public:
     bool shouldDestinationFolderBeOpenedOnExport() const override;
     void setShouldDestinationFolderBeOpenedOnExport(bool shouldDestinationFolderBeOpenedOnExport) override;
 
-    QUrl supportForumUrl() const override;
+    QUrl supportUrl() const override;
 
     QUrl dotComBugReportUrl() const override;
 

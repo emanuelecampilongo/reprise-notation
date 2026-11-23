@@ -34,8 +34,6 @@ qt_add_qml_module(appshell_qml
         FirstLaunchSetup/firstlaunchsetupmodel.h
         FirstLaunchSetup/themespagemodel.cpp
         FirstLaunchSetup/themespagemodel.h
-        FirstLaunchSetup/tutorialspagemodel.cpp
-        FirstLaunchSetup/tutorialspagemodel.h
         maintoolbarmodel.cpp
         maintoolbarmodel.h
         mainwindowtitleprovider.cpp
@@ -69,7 +67,6 @@ qt_add_qml_module(appshell_qml
         FirstLaunchSetup/Page.qml
         FirstLaunchSetup/PlaybackPage.qml
         FirstLaunchSetup/ThemesPage.qml
-        FirstLaunchSetup/TutorialsPage.qml
         HomePage/HomeMenu.qml
         HomePage/HomePage.qml
         HomePage/PluginsPage.qml
@@ -95,7 +92,6 @@ qt_add_qml_module(appshell_qml
         TARGET muse_dockwindow_qml
         TARGET muse_diagnostics_qml
         TARGET muse_extensions_qml
-        TARGET muse_learn_qml
         TARGET muse_mpe_qml
         TARGET muse_shortcuts_qml
         TARGET muse_tours_qml

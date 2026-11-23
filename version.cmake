@@ -30,7 +30,7 @@ set(MUSE_APP_GUI_IDENTIFIER org.musescore.${MUSE_APP_NAME_MACHINE_READABLE_COMPA
 # Independent public Reprise version. Keep the inherited MuseScore 4
 # compatibility/binary identifiers unchanged until the packaging migration.
 # A public 0.x version is a normal release number, not an alpha suffix.
-set(REPRISE_APP_VERSION "0.1.0")
+set(REPRISE_APP_VERSION "0.1.1")
 
 set(MUSE_APP_VERSION_MAJOR "4")
 set(MUSE_APP_VERSION_MINOR "7")

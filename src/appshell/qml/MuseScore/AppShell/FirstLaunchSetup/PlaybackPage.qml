@@ -33,12 +33,6 @@ Page {
 
     titleContentSpacing: 12
 
-    extraButtonTitle: qsTrc("appshell/gettingstarted", "Watch video")
-
-    onExtraButtonClicked: {
-        Qt.openUrlExternally("https://youtu.be/L8OdWHOjL8c")
-    }
-
     Image {
         id: image
         anchors.fill: parent

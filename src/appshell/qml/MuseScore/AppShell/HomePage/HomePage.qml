@@ -29,7 +29,6 @@ import Muse.UiComponents
 import Muse.Dock
 
 import Muse.Cloud
-import Muse.Learn
 import MuseScore.Project
 import MuseScore.MuseSounds
 
@@ -37,7 +36,6 @@ DockPage {
     id: root
 
     property string section: "scores"
-    property string subSection: ""
 
     property var window: null
 
@@ -46,11 +44,7 @@ DockPage {
 
     onSetParamsRequested: function(params) {
         if (Boolean(params["section"])) {
-            setCurrentCentral(params["section"])
-
-            if (Boolean(params["subSection"])) {
-                subSection = params["subSection"]
-            }
+            setCurrentCentral(params["section"] === "learn" ? "scores" : params["section"])
         }
     }
 
@@ -70,7 +64,6 @@ DockPage {
         case "plugins": root.central = extensionsComp; break // backward compatibility
         case "extensions": root.central = extensionsComp; break
         case "musesounds": root.central = museSoundsComp; break
-        case "learn": root.central = learnComp; break
         case "account": root.central = accountComp; break
         }
     }
@@ -130,13 +123,5 @@ DockPage {
         id: museSoundsComp
 
         MuseSoundsPage {}
-    }
-
-    Component {
-        id: learnComp
-
-        LearnPage {
-            section: root.subSection
-        }
     }
 }

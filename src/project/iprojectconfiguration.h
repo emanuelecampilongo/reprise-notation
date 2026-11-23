@@ -140,7 +140,7 @@ public:
     virtual bool shouldDestinationFolderBeOpenedOnExport() const = 0;
     virtual void setShouldDestinationFolderBeOpenedOnExport(bool shouldDestinationFolderBeOpenedOnExport) = 0;
 
-    virtual QUrl supportForumUrl() const = 0;
+    virtual QUrl supportUrl() const = 0;
 
     virtual QUrl dotComBugReportUrl() const = 0;
 

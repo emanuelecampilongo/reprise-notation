@@ -123,9 +123,10 @@ StyledDialogView {
 
             StyledTextLabel {
                 Layout.fillWidth: true
-                text: qsTrc("appshell/about", "<a href=\"%1\">Reprise Notation website</a> · <a href=\"%2\">GitHub</a>")
+                text: qsTrc("appshell/about", "<a href=\"%1\">Reprise Notation website</a> · <a href=\"%2\">GitHub</a> · <a href=\"%3\">Privacy policy</a>")
                       .arg("https://emanuelecampilongo.com/software/reprise-notation")
                       .arg("https://github.com/emanuelecampilongo/reprise-notation")
+                      .arg("https://github.com/emanuelecampilongo/reprise-notation/blob/main/PRIVACY.md")
                 wrapMode: Text.WordWrap
             }
 

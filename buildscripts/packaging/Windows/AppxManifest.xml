@@ -6,7 +6,7 @@
          IgnorableNamespaces="uap desktop7 rescap">
   <Identity Name="EmanueleCampilongo.RepriseNotation"
             Publisher="CN=70F9C2A0-F1B0-442E-8360-96AF8460EEFD"
-            Version="0.1.0.0" ProcessorArchitecture="x64" />
+            Version="1.1.1.0" ProcessorArchitecture="x64" />
   <Properties>
     <DisplayName>Reprise Notation</DisplayName>
     <PublisherDisplayName>Emanuele Campilongo</PublisherDisplayName>

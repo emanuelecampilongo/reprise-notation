@@ -100,9 +100,8 @@ private:
     void toggleFullScreen();
     void openAboutDialog();
 #ifdef Q_OS_WIN
-    void checkForRepriseUpdates(bool manual);
+    void checkForRepriseUpdates();
     bool m_checkingRepriseUpdates = false;
-    bool m_repriseUpdateCheckManual = false;
 #endif
     void openAboutQtDialog();
     void openAboutMusicXMLDialog();
