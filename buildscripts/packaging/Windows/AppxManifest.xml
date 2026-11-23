@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+         xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+         xmlns:desktop7="http://schemas.microsoft.com/appx/manifest/desktop/windows10/7"
+         xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+         IgnorableNamespaces="uap desktop7 rescap">
+  <Identity Name="EmanueleCampilongo.RepriseNotation"
+            Publisher="CN=70F9C2A0-F1B0-442E-8360-96AF8460EEFD"
+            Version="0.1.0.0" ProcessorArchitecture="x64" />
+  <Properties>
+    <DisplayName>Reprise Notation</DisplayName>
+    <PublisherDisplayName>Emanuele Campilongo</PublisherDisplayName>
+    <Logo>Assets\Logo50.png</Logo>
+  </Properties>
+  <Resources>
+    <Resource Language="en-US" />
+    <Resource Language="it-IT" />
+  </Resources>
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.19041.0" MaxVersionTested="10.0.26100.0" />
+  </Dependencies>
+  <Applications>
+    <Application Id="RepriseNotation" Executable="bin\Reprise Notation.exe" EntryPoint="Windows.FullTrustApplication">
+      <uap:VisualElements DisplayName="Reprise Notation" Description="Music notation and score editing"
+                          Square150x150Logo="Assets\Logo150.png" Square44x44Logo="Assets\Logo44.png"
+                          BackgroundColor="transparent" />
+      <Extensions>
+        <desktop7:Extension Category="windows.shortcut" Executable="bin\Reprise Notation.exe"
+                            EntryPoint="Windows.FullTrustApplication">
+          <desktop7:Shortcut File="$(Desktop)\Reprise Notation.lnk" Icon="Assets\RepriseAppIcon.ico" />
+        </desktop7:Extension>
+      </Extensions>
+    </Application>
+  </Applications>
+  <Capabilities>
+    <rescap:Capability Name="runFullTrust" />
+  </Capabilities>
+</Package>

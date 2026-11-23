@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">Reprise Notation | Lab</title>
+  <desc id="desc">Pittogramma del ritornello musicale: prima barra spessa, seconda sottile e due punti. Icona piena, quadrilatero asimmetrico ammorbidito, colore #F18F01, simbolo bianco, senza bordo né sfumature.</desc>
+  <path d="M 83 37 C 58 41 43 57 38 86 L 25 179 C 21 208 35 226 64 227 L 171 227 C 198 227 214 210 217 182 L 233 74 C 238 43 222 23 194 23 Z" fill="#F18F01"/>
+  <g fill="#FFFFFF">
+    <rect x="90" y="86" width="29" height="105" rx="7.5"/>
+    <rect x="134" y="86" width="12" height="105" rx="6"/>
+    <circle cx="172" cy="114" r="11.5"/>
+    <circle cx="172" cy="160" r="11.5"/>
+</g>
+</svg>

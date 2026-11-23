@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="392" height="392" viewBox="0 0 392 392">
+  <title>Reprise Notation</title>
+  <rect width="392" height="392" rx="86" fill="#14243F"/>
+  <path d="M72 246H320M72 269H320M72 292H320" stroke="#637F9F" stroke-width="5" stroke-linecap="round" opacity=".55"/>
+  <path d="M135 317V83h93c50 0 79 23 79 67 0 36-19 56-49 65l57 101h-57l-52-92h-20v93h-51zm51-135h38c22 0 32-10 32-29s-11-28-32-28h-38v57z" fill="#F7FBFF"/>
+  <path d="M99 246c66-43 129-46 194-8" fill="none" stroke="#30D9DD" stroke-width="12" stroke-linecap="round"/>
+</svg>

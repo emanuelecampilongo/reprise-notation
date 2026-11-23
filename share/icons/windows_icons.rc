@@ -1,0 +1,4 @@
+// Keep the two document indices for installer compatibility even when they share the same artwork.
+IDI_ICON1   ICON  DISCARDABLE "AppIcon\\RepriseAppIcon.ico"
+IDI_ICON2   ICON  DISCARDABLE "MsczIcon\\MS4_MsczIcon.ico"
+IDI_ICON3   ICON  DISCARDABLE "MscxIcon\\MS4_MscxIcon.ico"

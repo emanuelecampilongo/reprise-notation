@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" role="img" aria-label="Reprise Notation - Measure">
+  <title>Measure - Reprise Notation</title>
+  <!-- A single measure on five staff lines, with a discreet add mark. -->
+  <g transform="translate(2.88 2.88) scale(0.82)" fill="none" stroke="#24272c" stroke-linecap="round">
+    <path d="M4.5 10.2 H25.2 M4.5 13.55 H25.2 M4.5 16.9 H25.2 M4.5 20.25 H25.2 M4.5 23.6 H25.2" stroke-width="0.9"/>
+    <path d="M7.0 8.2 V25.5 M22.7 8.2 V25.5" stroke-width="1.7"/>
+    <path d="M26.4 3.6 V10.3 M23.05 6.95 H29.75" stroke-width="1.65"/>
+  </g>
+</svg>

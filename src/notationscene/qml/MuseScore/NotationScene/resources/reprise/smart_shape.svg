@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" role="img" aria-label="Reprise Notation - Smart Shape">
+  <title>Smart Shape - Reprise Notation</title>
+  <!-- Leland hairpinCresc; lengthened as an adjustable spanner -->
+<path d="M739 98 l-654 130 l654 130 l-6 29 l-728 -144 l0 -30 l728 -144 Z" transform="matrix(0.0321526 0 0 -0.0264151 4.03924 11.62264)" fill="#24272c"/>
+<!-- Leland noteheads at original aspect ratio -->
+<path d="M0 -42 c0 -43 31 -91 112 -91 c104 0 213 85 213 173 c0 59 -50 92 -112 92 c-97 0 -213 -82 -213 -174 Z" transform="matrix(0.0187692 0 0 -0.0187692 4.75000 22.47754)" fill="#24272c"/>
+<path d="M0 -42 c0 -43 31 -91 112 -91 c104 0 213 85 213 173 c0 59 -50 92 -112 92 c-97 0 -213 -82 -213 -174 Z" transform="matrix(0.0187692 0 0 -0.0187692 21.10000 22.47754)" fill="#24272c"/>
+<!-- Upright stems -->
+<path d="M10.75 21.55 V11.55 M27.1 21.55 V11.55" stroke="#24272c" stroke-width="1.0" fill="none" stroke-linecap="butt"/>
+<!-- Original Reprise calligraphic slur -->
+<path d="M4.65 26.6 C11.5 31.45 20.7 31.45 27.45 26.6 C22.15 29.6 10.1 29.6 4.65 26.6 Z" fill="#24272c"/>
+</svg>

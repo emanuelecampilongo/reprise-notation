@@ -1,0 +1,15 @@
+Reprise Notation — Toolbar icons v3 (32x32 SVG)
+
+Four icons: smart_shape.svg, articulation.svg, change_clef.svg, time_signature.svg.
+Differences vs v2: proportional Leland quarter note, notehead, accent and treble clef;
+correct location and direction of the arrowheads on the clef-change arcs.
+The hairpin is lengthened horizontally to fit the composite icon; the 4/4 remains
+as approved previously. Background is transparent. SVG shapes are editable,
+with embedded paths rather than a runtime music-font dependency.
+
+Musical outlines extracted from Leland by MuseScoreFonts, licensed SIL OFL 1.1.
+Source: https://github.com/MuseScoreFonts/Leland
+Leland font copyright MuseScore BVBA; see LICENSE_LELAND_OFL_1.1.txt.
+UI arrangement, original slur and arrows: Reprise Notation.
+
+Monochrome: replace #24272c with a light colour if icons are used on dark toolbar.
