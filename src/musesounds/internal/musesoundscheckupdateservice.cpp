@@ -72,6 +72,11 @@ Promise<RetVal<ReleaseInfo> > MuseSoundsCheckUpdateService::checkForUpdate()
         m_lastCheckResult.val = ReleaseInfo();
         m_lastCheckResult.ret = muse::make_ok();
 
+        if (!needCheckForUpdate()) {
+            m_lastCheckResult.ret = make_ret(Err::NoUpdate);
+            return resolve(m_lastCheckResult);
+        }
+
         if (configuration()->museSoundsCheckForUpdateTestMode()) {
             return resolve(m_lastCheckResult);
         }

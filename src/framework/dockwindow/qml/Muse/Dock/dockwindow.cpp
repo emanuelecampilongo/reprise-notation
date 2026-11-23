@@ -674,6 +674,28 @@ bool DockWindow::doLoadPage(const QString& uri, const QVariantMap& params)
 
     m_currentPage = newPage;
 
+    // Earlier Reprise previews saved these utility panels as open. Apply the
+    // new defaults once per workspace, keeping dock IDs stable for restoration.
+    const QString reprisePanelDefaultsKey = QStringLiteral("repriseNotationPanelDefaultsV1");
+    if (newPage->dockByName(REPRISE_HEADER_NAME) && uiConfiguration()->pageState(reprisePanelDefaultsKey).val.isEmpty()) {
+        const QString panelNames[] = {
+            QStringLiteral("palettesPanel"),
+            QStringLiteral("instrumentsPanel"),
+            QStringLiteral("inspectorPanel")
+        };
+        bool layoutChanged = false;
+        for (const QString& panelName : panelNames) {
+            if (newPage->isDockOpen(panelName)) {
+                newPage->setDockOpen(panelName, false);
+                layoutChanged = true;
+            }
+        }
+        if (layoutChanged) {
+            savePageState(newPage->objectName());
+        }
+        uiConfiguration()->setPageState(reprisePanelDefaultsKey, QByteArray("1"));
+    }
+
     connect(m_currentPage, &DockPageView::layoutRequested,
             this, &DockWindow::forceLayout, Qt::UniqueConnection);
 
