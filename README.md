@@ -14,7 +14,7 @@ When MakeMusic [ended Finale development](https://www.finalemusic.com/blog/end-o
 
 The Windows release is planned for the Microsoft Store. [Project website](https://emanuelecampilongo.com/software/reprise-notation)
 
-To report a problem or suggest an improvement, open **Help → Feedback…** or email [info@emanuelecampilongo.com](mailto:info@emanuelecampilongo.com). Include your Reprise Notation version and, if possible, the steps to reproduce the problem.
+Send bug reports, feature suggestions, and proposed code changes by email to [info@emanuelecampilongo.com](mailto:info@emanuelecampilongo.com). To copy the address from the app, open **Help → Feedback…**. See [Contributing to Reprise Notation](CONTRIBUTING.md) for what to include and how to build the app.
 
 ### Source code and credits
 
