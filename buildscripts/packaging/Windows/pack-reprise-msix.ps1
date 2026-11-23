@@ -8,6 +8,8 @@ param(
     [string]$PublisherDisplayName,
     [ValidatePattern('^\d+\.\d+\.\d+\.0$')][string]$PackageVersion,
     [Parameter(Mandatory)][string]$MakeAppxPath,
+    [ValidatePattern('^[a-f0-9]{40}$')][string]$SourceRevision,
+    [string]$QtNoticesDirectory,
     [string]$CertificateThumbprint
 )
 
@@ -72,7 +74,18 @@ try {
         }
     }
     Copy-Item -LiteralPath (Join-Path $repository 'LICENSE.txt') -Destination $stage
-    Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'REPRISE-DISTRIBUTION.md') -Destination $stage
+    $distributionNotice = Join-Path $stage 'REPRISE-DISTRIBUTION.md'
+    Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'REPRISE-DISTRIBUTION.md') -Destination $distributionNotice
+    if ($SourceRevision) {
+        $sourceUrl = "https://github.com/emanuelecampilongo/reprise-notation/tree/$SourceRevision"
+        Add-Content -LiteralPath $distributionNotice -Value "`nCorresponding Reprise Notation source for this package is available at $sourceUrl."
+    }
+    if ($QtNoticesDirectory) {
+        $qtNotices = (Resolve-Path -LiteralPath $QtNoticesDirectory).Path
+        $qtDestination = Join-Path $stage 'Licenses\Qt'
+        New-Item -ItemType Directory -Path $qtDestination -Force | Out-Null
+        Get-ChildItem -LiteralPath $qtNotices -File | Copy-Item -Destination $qtDestination
+    }
     $fontRoot = Join-Path $repository 'fonts'
     Get-ChildItem -LiteralPath $fontRoot -File -Recurse | Where-Object Name -match '^(LICENSE|OFL)(\.txt)?$' |
         ForEach-Object {
