@@ -25,6 +25,15 @@
                           Square150x150Logo="Assets\Logo150.png" Square44x44Logo="Assets\Logo44.png"
                           BackgroundColor="transparent" />
       <Extensions>
+        <uap:Extension Category="windows.fileTypeAssociation">
+          <uap:FileTypeAssociation Name="musescore">
+            <uap:DisplayName>MuseScore score</uap:DisplayName>
+            <uap:SupportedFileTypes>
+              <uap:FileType>.mscz</uap:FileType>
+              <uap:FileType>.mscx</uap:FileType>
+            </uap:SupportedFileTypes>
+          </uap:FileTypeAssociation>
+        </uap:Extension>
         <desktop7:Extension Category="windows.shortcut" Executable="bin\Reprise Notation.exe"
                             EntryPoint="Windows.FullTrustApplication">
           <desktop7:Shortcut File="$(Desktop)\Reprise Notation.lnk" Icon="Assets\RepriseAppIcon.ico" />
