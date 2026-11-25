@@ -27,6 +27,7 @@ StyledDialogView {
     function showForCurrentSelection() {
         selectedRow = -1
         keySignatureGrid.currentIndex = -1
+        transposeSelection.checked = false
         show()
     }
 
@@ -34,7 +35,7 @@ StyledDialogView {
         if (selectedRow < 0 || !keySignatureModel.available) {
             return
         }
-        if (keySignatureModel.apply(selectedRow)) {
+        if (keySignatureModel.apply(selectedRow, transposeSelection.enabled && transposeSelection.checked)) {
             hide()
         }
     }
@@ -132,6 +133,14 @@ StyledDialogView {
                     }
                 }
             }
+        }
+
+        CheckBox {
+            id: transposeSelection
+            Layout.fillWidth: true
+            text: qsTr("Transpose selected measures to the new key")
+            enabled: keySignatureModel.canTransposeSelection(root.selectedRow)
+            onClicked: checked = !checked
         }
 
         RowLayout {

@@ -6,6 +6,7 @@
 
 #include "internal/palette.h"
 #include "internal/palettecell.h"
+#include "engraving/dom/keysig.h"
 
 using namespace mu::palette;
 
@@ -80,7 +81,25 @@ int RepriseKeySignatureHelper::count() const
     return rowCount();
 }
 
-bool RepriseKeySignatureHelper::apply(int row)
+bool RepriseKeySignatureHelper::canTransposeSelection(int row) const
+{
+    const auto notation = m_globalContext()->currentNotation();
+    if (!notation || !notation->interaction()->selection()->isRange() || row < 0 || row >= rowCount()) {
+        return false;
+    }
+
+    const Entry& entry = m_entries.at(static_cast<size_t>(row));
+    const auto model = entry.catalog ? m_catalogModel : m_userModel;
+    const auto cell = model && entry.index.isValid() ? model->findCell(entry.index) : nullptr;
+    if (!cell || !cell->element || !cell->element->isKeySig()) {
+        return false;
+    }
+
+    const auto* keySig = engraving::toKeySig(cell->element.get());
+    return !keySig->isCustom() && !keySig->isAtonal();
+}
+
+bool RepriseKeySignatureHelper::apply(int row, bool transposeSelection)
 {
     if (!m_provider || row < 0 || row >= rowCount()) {
         return false;
@@ -102,9 +121,28 @@ bool RepriseKeySignatureHelper::apply(int row)
     const auto undoStack = notation->undoStack();
     undoStack->prepareChanges(muse::TranslatableString("undoableAction", "Change key signature"));
     undoStack->lock();
-    const bool applied = controller->applyPaletteElement(entry.index, Qt::NoModifier);
+    bool transposed = true;
+    if (transposeSelection) {
+        transposed = canTransposeSelection(row);
+        if (transposed) {
+            const auto model = entry.catalog ? m_catalogModel : m_userModel;
+            const auto cell = model->findCell(entry.index);
+            notation::TransposeOptions options;
+            options.mode = notation::TransposeMode::TO_KEY;
+            options.direction = notation::TransposeDirection::CLOSEST;
+            options.key = engraving::toKeySig(cell->element.get())->key();
+            options.needTransposeChordNames = true;
+            transposed = notation->interaction()->transpose(options);
+        }
+    }
+    const bool applied = transposed && controller->applyPaletteElement(entry.index, Qt::NoModifier);
     if (applied) {
-        notation->style()->setStyleValue(engraving::Sid::keySigCourtesyBarlineMode,
+        const auto style = notation->style();
+        if (style->styleValue(engraving::Sid::keySigNaturals).toInt() == int(engraving::KeySigNatural::NONE)) {
+            style->setStyleValue(engraving::Sid::keySigNaturals,
+                                 engraving::PropertyValue(int(engraving::KeySigNatural::BEFORE)));
+        }
+        style->setStyleValue(engraving::Sid::keySigCourtesyBarlineMode,
                                         engraving::PropertyValue(int(engraving::CourtesyBarlineMode::ALWAYS_DOUBLE)));
     }
     undoStack->unlock();

@@ -38,6 +38,7 @@ class NotationContextMenuModel : public muse::uicomponents::AbstractMenuModel
 
 public:
     Q_INVOKABLE void loadItems(int elementType);
+    Q_INVOKABLE void handleMenuItem(const QString& itemId) override;
 
 private:
     muse::uicomponents::MenuItemList makeItemsByElementType(ElementType type);

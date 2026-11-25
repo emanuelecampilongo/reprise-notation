@@ -55,7 +55,7 @@ public:
     muse::SizeF pageSizeInch() const override;
     muse::SizeF pageSizeInch(const Options& opt) const override;
 
-    void paintView(muse::draw::Painter* painter, const muse::RectF& frameRect, bool isPrinting) override;
+    void paintView(muse::draw::Painter* painter, const muse::RectF& frameRect, bool isPrinting, int visibleVoice = -1) override;
     void paintPdf(muse::draw::Painter* painter, const Options& opt) override;
     void paintPrint(muse::draw::Painter* painter, const Options& opt) override;
     void paintPng(muse::draw::Painter* painter, const Options& opt) override;

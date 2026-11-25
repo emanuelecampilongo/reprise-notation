@@ -57,6 +57,7 @@ public:
     static SymbolId actionArticulationSymbolId(const muse::actions::ActionCode& actionCode);
 
     static const muse::ui::ToolConfig& defaultNoteInputBarConfig();
+    static bool isNoteInputBarActionVisible(const muse::actions::ActionCode& action);
 
 private:
     static const muse::ui::UiActionList s_actions;

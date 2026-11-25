@@ -47,7 +47,8 @@ public:
     bool creatorAvailable() const;
     int count() const;
 
-    Q_INVOKABLE bool apply(int row);
+    Q_INVOKABLE bool apply(int row, bool transposeSelection = false);
+    Q_INVOKABLE bool canTransposeSelection(int row) const;
     Q_INVOKABLE bool openCreator();
 
 signals:

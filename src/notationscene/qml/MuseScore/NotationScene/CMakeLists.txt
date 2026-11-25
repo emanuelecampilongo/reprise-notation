@@ -260,6 +260,8 @@ qt_add_qml_module(notationscene_qml
     RESOURCES
         resources/reprise/select.svg
         resources/reprise/simple_entry.svg
+        resources/reprise/speedy_entry.svg
+        resources/reprise/active_voice.svg
         resources/reprise/measure.svg
         resources/reprise/key_signature.svg
         resources/reprise/expression.svg

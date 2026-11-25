@@ -6,7 +6,7 @@
          IgnorableNamespaces="uap desktop7 rescap">
   <Identity Name="EmanueleCampilongo.RepriseNotation"
             Publisher="CN=70F9C2A0-F1B0-442E-8360-96AF8460EEFD"
-            Version="1.1.1.0" ProcessorArchitecture="x64" />
+            Version="1.1.3.0" ProcessorArchitecture="x64" />
   <Properties>
     <DisplayName>Reprise Notation</DisplayName>
     <PublisherDisplayName>Emanuele Campilongo</PublisherDisplayName>
@@ -26,10 +26,19 @@
                           BackgroundColor="transparent" />
       <Extensions>
         <uap:Extension Category="windows.fileTypeAssociation">
-          <uap:FileTypeAssociation Name="musescore">
-            <uap:DisplayName>MuseScore score</uap:DisplayName>
+          <uap:FileTypeAssociation Name="mscz">
+            <uap:DisplayName>MuseScore score (.mscz)</uap:DisplayName>
+            <uap:Logo>Assets\mscz.png</uap:Logo>
             <uap:SupportedFileTypes>
               <uap:FileType>.mscz</uap:FileType>
+            </uap:SupportedFileTypes>
+          </uap:FileTypeAssociation>
+        </uap:Extension>
+        <uap:Extension Category="windows.fileTypeAssociation">
+          <uap:FileTypeAssociation Name="mscx">
+            <uap:DisplayName>MuseScore score (.mscx)</uap:DisplayName>
+            <uap:Logo>Assets\mscx.png</uap:Logo>
+            <uap:SupportedFileTypes>
               <uap:FileType>.mscx</uap:FileType>
             </uap:SupportedFileTypes>
           </uap:FileTypeAssociation>

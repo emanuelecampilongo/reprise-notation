@@ -38755,6 +38755,36 @@ fallita: %2</translation>
 <context>
     <name>RepriseToolBar</name>
     <message>
+        <source>Use MIDI Device for Input</source>
+        <translation>Usa un dispositivo MIDI per l’inserimento</translation>
+    </message>
+    <message>
+        <source>Choose a pitch, then press a number to enter the note</source>
+        <translation>Scegli il tono, poi premi un numero per inserire la nota</translation>
+    </message>
+    <message>
+        <source>Speedy Entry options</source>
+        <translation>Opzioni di Speedy Entry</translation>
+    </message>
+    <message>
+        <source>Speedy Entry</source>
+        <translation>Speedy Entry</translation>
+    </message>
+    <message>
+        <source>Show active voice only</source>
+        <translation>Mostra solo il livello attivo</translation>
+    </message>
+    <message>
+        <source>Active Voice
+Only</source>
+        <translation>Solo livello
+attivo</translation>
+    </message>
+    <message>
+        <source>Active Voice Only</source>
+        <translation>Solo livello attivo</translation>
+    </message>
+    <message>
         <source>Articulation</source>
         <comment>toolbar caption</comment>
         <translation>Articola-
@@ -39047,6 +39077,10 @@ musicali</translation>
 </context>
 <context>
     <name>RepriseKeySignatureDialog</name>
+    <message>
+        <source>Transpose selected measures to the new key</source>
+        <translation>Trasporta le battute selezionate nella nuova tonalità</translation>
+    </message>
     <message>
         <source>Cancel</source>
         <translation>Annulla</translation>

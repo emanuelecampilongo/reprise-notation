@@ -45,7 +45,7 @@ public:
     virtual muse::SizeF pageSizeInch() const = 0;
     virtual muse::SizeF pageSizeInch(const Options& opt) const = 0;
 
-    virtual void paintView(muse::draw::Painter* painter, const muse::RectF& frameRect, bool isPrinting) = 0;
+    virtual void paintView(muse::draw::Painter* painter, const muse::RectF& frameRect, bool isPrinting, int visibleVoice = -1) = 0;
     virtual void paintPdf(muse::draw::Painter* painter, const Options& opt) = 0;
     virtual void paintPrint(muse::draw::Painter* painter, const Options& opt) = 0;
     virtual void paintPng(muse::draw::Painter* painter, const Options& opt) = 0;

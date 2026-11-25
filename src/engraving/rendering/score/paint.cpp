@@ -146,6 +146,20 @@ void Paint::paintScore(Painter* painter, Score* score, const IScoreRenderer::Sco
             }
 
             std::vector<EngravingItem*> elements = page->items(drawRect.translated(-pagePos));
+            if (opt.visibleVoice >= 0 && !opt.isPrinting) {
+                elements.erase(std::remove_if(elements.begin(), elements.end(), [&opt](const EngravingItem* item) {
+                    const auto isOtherVoice = [&opt](const EngravingItem* entry) {
+                        return entry->track() != muse::nidx && static_cast<int>(entry->voice()) != opt.visibleVoice;
+                    };
+                    for (const auto* parent = item; parent; parent = parent->parentItem()) {
+                        if (parent->isChordRest() || parent->isNote() || parent->isBeam() || parent->isTuplet()
+                            || parent->isTieSegment() || parent->isSlurSegment()) {
+                            return isOtherVoice(parent);
+                        }
+                    }
+                    return false;
+                }), elements.end());
+            }
             paintItems(*painter, elements, opt);
 
             if (disableClipping) {

@@ -260,10 +260,21 @@ DockPage {
 
                 noteInputActive: root.repriseScoreView ? root.repriseScoreView.paintView.noteInputActive : false
                 onToolRequested: tool => root.repriseScoreView?.paintView.selectRepriseTool(tool)
+                speedyEntryActive: root.repriseScoreView?.paintView.speedyEntryActive ?? false
+                onSpeedyEntryRequested: {
+                    root.repriseScoreView?.focusRepriseScore()
+                    root.repriseScoreView?.paintView.toggleSpeedyEntry()
+                }
                 onNoteInputRequested: {
                     if (root.repriseScoreView) {
                         root.repriseScoreView.focusRepriseScore()
                         root.pageModel.toggleRepriseSimpleEntry()
+                    }
+                }
+                showOnlyActiveVoice: root.repriseScoreView?.paintView.showOnlyActiveVoice ?? false
+                onShowOnlyActiveVoiceRequested: enabled => {
+                    if (root.repriseScoreView) {
+                        root.repriseScoreView.paintView.showOnlyActiveVoice = enabled
                     }
                 }
                 onScoreFocusRequested: root.repriseScoreView?.focusRepriseScore()

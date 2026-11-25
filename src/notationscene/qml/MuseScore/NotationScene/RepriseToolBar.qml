@@ -20,7 +20,11 @@ FocusScope {
     property bool noteInputActive: false
     signal toolRequested(int tool)
     signal noteInputRequested()
+    property bool speedyEntryActive: false
+    signal speedyEntryRequested()
     signal scoreFocusRequested()
+    property bool showOnlyActiveVoice: false
+    signal showOnlyActiveVoiceRequested(bool enabled)
     // The dock can shrink while the strip keeps every tool reachable.
     implicitWidth: 240
     implicitHeight: 64
@@ -146,7 +150,7 @@ FocusScope {
             svgSource: Qt.resolvedUrl("resources/reprise/simple_entry.svg")
             toolTipTitle: text
             enabled: root.toolModel.enabled
-            accentButton: root.noteInputActive
+            accentButton: root.noteInputActive && !root.speedyEntryActive
             accessible.checked: accentButton
             navigation.panel: toolNavigation
             navigation.order: 2
@@ -158,6 +162,36 @@ FocusScope {
             Layout.preferredHeight: 24
             color: palette.mid
             readonly property SystemPalette palette: SystemPalette {}
+        }
+
+        RepriseSvgButton {
+            objectName: "repriseSpeedyEntryTool"
+            text: qsTr("Speedy Entry")
+            svgSource: Qt.resolvedUrl("resources/reprise/speedy_entry.svg")
+            toolTipTitle: text
+            toolTipDescription: qsTr("Choose a pitch, then press a number to enter the note")
+            enabled: root.toolModel.enabled
+            accentButton: root.speedyEntryActive
+            accessible.checked: accentButton
+            navigation.panel: toolNavigation
+            navigation.order: 3
+            onClicked: root.speedyEntryRequested()
+        }
+
+        FlatButton {
+            accessible.name: qsTr("Speedy Entry options")
+            icon: IconCode.SMALL_ARROW_DOWN
+            visible: root.speedyEntryActive
+            navigation.panel: toolNavigation
+            navigation.order: 4
+            onClicked: speedyMenu.toggleOpened([
+                { id: "speedy-midi", title: qsTr("Use MIDI Device for Input"), enabled: false }
+            ])
+
+            StyledMenuLoader {
+                id: speedyMenu
+                menuAnchorItem: ui.rootItem
+            }
         }
 
         RepriseSvgButton {
@@ -173,7 +207,7 @@ FocusScope {
             enabled: root.toolModel.enabled
             accentButton: root.toolModel.activeTool === RepriseToolModel.KeySignature
             navigation.panel: toolNavigation
-            navigation.order: 3
+            navigation.order: 5
             accessible.checked: root.toolModel.activeTool === RepriseToolModel.KeySignature
             onClicked: {
                 root.toolRequested(RepriseToolModel.KeySignature)
@@ -195,7 +229,7 @@ FocusScope {
             enabled: root.toolModel.enabled
             accentButton: root.toolModel.activeTool === RepriseToolModel.TimeSignature
             navigation.panel: toolNavigation
-            navigation.order: 4
+            navigation.order: 6
             accessible.checked: root.toolModel.activeTool === RepriseToolModel.TimeSignature
             onClicked: {
                 root.toolRequested(RepriseToolModel.TimeSignature)
@@ -217,7 +251,7 @@ FocusScope {
             enabled: root.toolModel.enabled
             accentButton: root.toolModel.activeTool === RepriseToolModel.Clef
             navigation.panel: toolNavigation
-            navigation.order: 5
+            navigation.order: 7
             accessible.checked: root.toolModel.activeTool === RepriseToolModel.Clef
             onClicked: {
                 root.toolRequested(RepriseToolModel.Clef)
@@ -235,7 +269,7 @@ FocusScope {
             accentButton: root.toolModel.activeTool === RepriseToolModel.Measure
             accessible.checked: accentButton
             navigation.panel: toolNavigation
-            navigation.order: 6
+            navigation.order: 8
             onClicked: {
                 root.toolRequested(RepriseToolModel.Measure)
                 root.scoreFocusRequested()
@@ -262,7 +296,7 @@ FocusScope {
             enabled: root.toolModel.enabled
             accentButton: root.toolModel.activeTool === RepriseToolModel.SmartShape
             navigation.panel: toolNavigation
-            navigation.order: 7
+            navigation.order: 9
             accessible.checked: root.toolModel.activeTool === RepriseToolModel.SmartShape
             onClicked: {
                 root.toolRequested(RepriseToolModel.SmartShape)
@@ -284,7 +318,7 @@ FocusScope {
             enabled: root.toolModel.enabled
             accentButton: root.toolModel.activeTool === RepriseToolModel.Articulation
             navigation.panel: toolNavigation
-            navigation.order: 8
+            navigation.order: 10
             accessible.checked: root.toolModel.activeTool === RepriseToolModel.Articulation
             onClicked: {
                 root.toolRequested(RepriseToolModel.Articulation)
@@ -304,7 +338,7 @@ FocusScope {
             enabled: root.toolModel.enabled
             accentButton: root.toolModel.activeTool === RepriseToolModel.Expression
             navigation.panel: toolNavigation
-            navigation.order: 9
+            navigation.order: 11
             accessible.checked: root.toolModel.activeTool === RepriseToolModel.Expression
             onClicked: {
                 root.toolRequested(RepriseToolModel.Expression)
@@ -318,12 +352,28 @@ FocusScope {
             text: qsTr("Repeat")
             enabled: root.toolModel.enabled
             navigation.panel: toolNavigation
-            navigation.order: 10
+            navigation.order: 12
             accentButton: root.toolModel.activeTool === RepriseToolModel.Repeat
             accessible.checked: accentButton
             toolTipDescription: qsTr("Double-click a measure to manage repeats")
             onClicked: {
                 root.toolRequested(RepriseToolModel.Repeat)
+                root.scoreFocusRequested()
+            }
+        }
+        RepriseSvgButton {
+            objectName: "repriseActiveVoiceOnly"
+            text: qsTr("Active Voice Only")
+            caption: qsTr("Active Voice\nOnly")
+            svgSource: Qt.resolvedUrl("resources/reprise/active_voice.svg")
+            toolTipTitle: qsTr("Show active voice only")
+            accessible.checked: root.showOnlyActiveVoice
+            accentButton: root.showOnlyActiveVoice
+            enabled: root.toolModel.enabled
+            navigation.panel: toolNavigation
+            navigation.order: 13
+            onClicked: {
+                root.showOnlyActiveVoiceRequested(!root.showOnlyActiveVoice)
                 root.scoreFocusRequested()
             }
         }

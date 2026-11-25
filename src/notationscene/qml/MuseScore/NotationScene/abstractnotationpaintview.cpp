@@ -35,6 +35,7 @@
 #include "async/async.h"
 
 #include "actions/actiontypes.h"
+#include "internal/notationuiactions.h"
 #include "engraving/dom/accidental.h"
 #include "engraving/dom/anchors.h"
 #include "engraving/dom/shadownote.h"
@@ -46,7 +47,13 @@
 #include "engraving/dom/segment.h"
 #include "engraving/dom/slur.h"
 #include "engraving/dom/staff.h"
+#include "engraving/dom/measure.h"
+#include "engraving/dom/system.h"
+#include "engraving/dom/utils.h"
 #include <utility>
+#ifdef Q_OS_WIN
+#include <qt_windows.h>
+#endif
 #include "log.h"
 
 using namespace mu;
@@ -675,8 +682,52 @@ INotationSelectionPtr AbstractNotationPaintView::notationSelection() const
     return notationInteraction() ? notationInteraction()->selection() : nullptr;
 }
 
+bool AbstractNotationPaintView::speedyEntryActive() const
+{
+    return m_speedyEntrySelected && isNoteEnterMode()
+           && usesRepriseEditing()
+           && notationNoteInput()->usingNoteInputMethod(NoteInputMethod::BY_DURATION);
+}
+
+void AbstractNotationPaintView::setShowOnlyActiveVoice(bool enabled)
+{
+    if (m_showOnlyActiveVoice == enabled) {
+        return;
+    }
+
+    m_showOnlyActiveVoice = enabled;
+    emit showOnlyActiveVoiceChanged();
+    scheduleRedraw();
+}
+
+void AbstractNotationPaintView::toggleSpeedyEntry()
+{
+    const auto input = notationNoteInput();
+    if (!usesRepriseEditing() || !input) {
+        return;
+    }
+
+    if (speedyEntryActive()) {
+        dispatcher()->dispatch("note-input-by-duration");
+        return;
+    }
+
+    m_speedyOctaveOffset = 0;
+    if (input->isNoteInputMode()) {
+        input->setNoteInputMethod(NoteInputMethod::BY_DURATION);
+    } else {
+        dispatcher()->dispatch("note-input-by-duration");
+    }
+
+    m_speedyEntrySelected = input->isNoteInputMode() && input->usingNoteInputMethod(NoteInputMethod::BY_DURATION);
+    onNoteInputStateChanged();
+}
+
 void AbstractNotationPaintView::onNoteInputStateChanged()
 {
+    if (!isNoteEnterMode() || !notationNoteInput()->usingNoteInputMethod(NoteInputMethod::BY_DURATION)) {
+        m_speedyEntrySelected = false;
+    }
     if (m_repriseToolModel && isNoteEnterMode()) {
         m_repriseToolModel->reset();
         m_repriseEscapeHeld = false;
@@ -804,6 +855,42 @@ bool AbstractNotationPaintView::elementPopupIsOpen(const ElementType& elementTyp
     return m_currentElementPopupType == modelType;
 }
 
+static void paintSpeedyEntryCursor(Painter* painter, const NoteInputState& input, const Color& color)
+{
+    if (!input.isValid()) {
+        return;
+    }
+
+    const auto* segment = input.segment();
+    const auto* staff = input.staff();
+    const auto* system = segment ? segment->system() : nullptr;
+    const auto* measure = segment ? segment->measure() : nullptr;
+    if (!staff || !system || !measure) {
+        return;
+    }
+
+    const double space = staff->spatium(input.tick());
+    const double staffY = system->staffCanvasYpage(input.staffIdx());
+    const double left = measure->canvasPos().x();
+    const double top = staffY - 1.5 * space;
+    const double width = measure->width();
+    const double height = staff->staffHeight(input.tick()) + 3.0 * space;
+    const double stroke = 0.10 * space;
+    const double x = segment->canvasPos().x();
+
+    painter->fillRect(RectF(left, top, width, stroke), color);
+    painter->fillRect(RectF(left, top + height, width, stroke), color);
+    painter->fillRect(RectF(left, top, stroke, height), color);
+    painter->fillRect(RectF(left + width, top, stroke, height), color);
+    painter->fillRect(RectF(x, top, stroke, height), color);
+
+    if (!input.notes().empty()) {
+        const int line = engraving::noteValToLine(input.notes().front(), staff, input.tick());
+        const double y = staffY + line * staff->lineDistance(input.tick()) * space / 2;
+        painter->fillRect(RectF(x - 0.65 * space, y, 1.4 * space, 1.5 * stroke), color);
+    }
+}
+
 void AbstractNotationPaintView::paint(QPainter* qp)
 {
     TRACEFUNC;
@@ -827,14 +914,18 @@ void AbstractNotationPaintView::paint(QPainter* qp)
     painter->setWorldTransform(m_matrix * guiScalingCompensation);
 
     bool isPrinting = publishMode() || m_inputController->readonly();
-    notation()->painting()->paintView(painter, toLogical(rect), isPrinting);
+    const int visibleVoice = !isPrinting && m_showOnlyActiveVoice && notationNoteInput()
+                             ? static_cast<int>(notationNoteInput()->state().voice()) : -1;
+    notation()->painting()->paintView(painter, toLogical(rect), isPrinting, visibleVoice);
 
     const ui::UiContext& uiCtx = uiContextResolver()->currentUiContext();
     const bool isOnNotationPage = uiCtx == ui::UiCtxProjectOpened || uiCtx == ui::UiCtxProjectFocused;
 
     const INotationNoteInputPtr noteInput = notationNoteInput();
     if (noteInput->isNoteInputMode() && isOnNotationPage) {
-        if (noteInput->usingNoteInputMethod(NoteInputMethod::BY_DURATION)
+        if (speedyEntryActive()) {
+            paintSpeedyEntryCursor(painter, noteInput->state(), engravingConfiguration()->selectionColor(noteInput->state().voice()));
+        } else if (noteInput->usingNoteInputMethod(NoteInputMethod::BY_DURATION)
             && !notationConfiguration()->useNoteInputCursorInInputByDuration()) {
             m_ruler->paint(painter, noteInput->state());
         } else {
@@ -1395,6 +1486,30 @@ void AbstractNotationPaintView::mousePressEvent(QMouseEvent* event)
     TRACEFUNC;
     forceFocusIn();
 
+    if (speedyEntryActive() && event->button() == Qt::LeftButton && event->modifiers() == Qt::NoModifier) {
+        const auto input = notationNoteInput();
+        const auto* previousStaff = input->state().staff();
+        if (previousStaff) {
+            auto* score = previousStaff->score();
+            engraving::staff_idx_t staffIndex = muse::nidx;
+            engraving::Segment* segment = nullptr;
+            if (score->pos2measure(toLogical(PointF::fromQPointF(event->position())), &staffIndex, nullptr, &segment, nullptr)) {
+                const auto track = staffIndex * engraving::VOICES + input->state().voice();
+                auto* entry = segment->element(track);
+                if (entry && entry->isChord()) {
+                    entry = engraving::toChord(entry)->upNote();
+                }
+                if (entry) {
+                    notationInteraction()->select({ entry }, SelectType::SINGLE, staffIndex);
+                }
+                score->inputState().setSegment(segment);
+                input->setCurrentTrack(track);
+            }
+        }
+        event->accept();
+        return;
+    }
+
     if (m_reprisePointer.ownsPointer()) {
         cancelRepriseSlur();
         event->accept();
@@ -1460,6 +1575,10 @@ void AbstractNotationPaintView::mouseDoubleClickEvent(QMouseEvent* event)
 
 void AbstractNotationPaintView::mouseReleaseEvent(QMouseEvent* event)
 {
+    if (speedyEntryActive() && event->button() == Qt::LeftButton && event->modifiers() == Qt::NoModifier) {
+        event->accept();
+        return;
+    }
     if (m_reprisePointer.ownsPointer()) {
         if (event->button() == Qt::LeftButton) {
             auto commit = std::move(m_repriseSlurCommit);
@@ -1508,13 +1627,170 @@ void AbstractNotationPaintView::hoverLeaveEvent(QHoverEvent* event)
     }
 }
 
+static int speedyKeyboardPitch(const QKeyEvent* event)
+{
+#ifdef Q_OS_WIN
+    if (!(GetKeyState(VK_CAPITAL) & 1) || event->modifiers() != Qt::NoModifier) {
+        return -1;
+    }
+
+    const QString keys = QStringLiteral("ZXCVBNMASDFGHJQWERTYU");
+    const int index = event->key() >= Qt::Key_A && event->key() <= Qt::Key_Z ? keys.indexOf(QChar(event->key())) : -1;
+    if (index >= 0) {
+        static constexpr int offsets[] = { 0, 2, 4, 5, 7, 9, 11 };
+        return 48 + 12 * (index / 7) + offsets[index % 7];
+    }
+
+    switch (event->key()) {
+    case Qt::Key_I: return -2;
+    case Qt::Key_K: return -3;
+    case Qt::Key_Comma: return -4;
+    default: break;
+    }
+#else
+    (void)event;
+#endif
+    return -1;
+}
+
+static bool isSpeedyEntryDirectCommand(const QKeyEvent* event)
+{
+    const auto modifiers = event->modifiers() & ~Qt::KeypadModifier;
+    return speedyKeyboardPitch(event) != -1
+           || (modifiers == Qt::NoModifier && event->key() == Qt::Key_Backspace)
+           || (modifiers == Qt::ShiftModifier && (event->key() == Qt::Key_Up || event->key() == Qt::Key_Down))
+           || ((modifiers == Qt::NoModifier || modifiers == Qt::ShiftModifier)
+               && (event->key() == Qt::Key_Apostrophe || event->key() == Qt::Key_QuoteDbl))
+           || (event->modifiers() == Qt::NoModifier && (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter))
+           || (event->modifiers() == Qt::KeypadModifier && event->key() == Qt::Key_Enter);
+}
+
+static void deleteSpeedyPitch(const INotationPtr& notation, const NoteInputState& state)
+{
+    auto* entry = state.cr();
+    if (!entry || !entry->isChord() || state.notes().empty()) {
+        return;
+    }
+
+    auto* chord = engraving::toChord(entry);
+    auto* note = chord->downNote();
+    if (chord->notes().size() > 1) {
+        note = nullptr;
+        const int targetLine = engraving::noteValToLine(state.notes().front(), state.staff(), state.tick());
+        for (auto* candidate : chord->notes()) {
+            if (engraving::noteValToLine(candidate->noteVal(), state.staff(), state.tick()) == targetLine) {
+                note = candidate;
+                break;
+            }
+        }
+    }
+    if (!note) {
+        return;
+    }
+
+    const auto undoStack = notation->undoStack();
+    undoStack->prepareChanges(TranslatableString("undoableAction", "Delete note"));
+    note->score()->deleteItem(note);
+    undoStack->commitChanges();
+}
+
+static bool changeSpeedyChordDuration(const INotationPtr& notation, engraving::ChordRest* entry,
+                                      const char* action)
+{
+    if (!entry || !entry->isChord()) {
+        return false;
+    }
+
+    const auto type = NotationUiActions::actionDurationType(action);
+    if (type == engraving::DurationType::V_INVALID) {
+        return false;
+    }
+
+    engraving::TDuration duration(type);
+    duration.setDots(entry->durationType().dots());
+    if (duration == entry->durationType()) {
+        return true;
+    }
+
+    const auto targetEnd = entry->tick() + duration.fraction() * entry->actualTicks() / entry->ticks();
+    if (targetEnd > entry->measure()->tick() + entry->measure()->ticks()) {
+        return true;
+    }
+    for (const auto* segment = entry->segment()->next(); segment && segment->tick() < targetEnd; segment = segment->next()) {
+        const auto* following = segment->element(entry->track());
+        if (following && !following->isRest() && following->isChordRest()) {
+            return true;
+        }
+    }
+
+    const auto undoStack = notation->undoStack();
+    undoStack->prepareChanges(TranslatableString("undoableAction", "Change note duration"));
+    entry->score()->changeCRlen(entry, duration);
+    undoStack->commitChanges();
+    return true;
+}
+
+static const char* speedyEntryAction(const QKeyEvent* event)
+{
+    const auto modifiers = event->modifiers() & ~Qt::KeypadModifier;
+    if ((modifiers == Qt::NoModifier || modifiers == (Qt::ControlModifier | Qt::ShiftModifier))
+        && event->key() >= Qt::Key_1 && event->key() <= Qt::Key_7) {
+        static constexpr const char* durations[] = {
+            "pad-note-64", "pad-note-32", "pad-note-16", "pad-note-8", "pad-note-4", "pad-note-2", "pad-note-1"
+        };
+        return durations[event->key() - Qt::Key_1];
+    }
+    if (modifiers == Qt::ControlModifier) {
+        static constexpr const char* tuplets[] = {
+            "tuplet-dialog", "duplet", "triplet", "quadruplet", "quintuplet", "sextuplet", "septuplet", "octuplet"
+        };
+        if (event->key() >= Qt::Key_1 && event->key() <= Qt::Key_8) {
+            return tuplets[event->key() - Qt::Key_1];
+        }
+        return event->key() == Qt::Key_0 ? "pad-note-128" : nullptr;
+    }
+    if (modifiers == Qt::ShiftModifier) {
+        switch (event->key()) {
+        case Qt::Key_B: return "beam-auto";
+        case Qt::Key_Left: return "notation-move-left-quickly";
+        case Qt::Key_Right: return "notation-move-right-quickly";
+        default: return nullptr;
+        }
+    }
+    if (modifiers != Qt::NoModifier) {
+        return nullptr;
+    }
+
+    switch (event->key()) {
+    case Qt::Key_8: return "note-breve";
+    case Qt::Key_BracketLeft: return "notation-move-left-quickly";
+    case Qt::Key_BracketRight: return "notation-move-right-quickly";
+    case Qt::Key_Period: return "pad-dot";
+    case Qt::Key_X: return "sharp2-post";
+    case Qt::Key_S: return "sharp-post";
+    case Qt::Key_N: return "nat-post";
+    case Qt::Key_F: return "flat-post";
+    case Qt::Key_V: return "flat2-post";
+    case Qt::Key_R: return "rest";
+    case Qt::Key_Delete: return "action://notation/delete";
+    case Qt::Key_O:
+    case Qt::Key_H: return "toggle-visible";
+    case Qt::Key_L: return "flip";
+    case Qt::Key_Equal:
+    case Qt::Key_T: return "tie";
+    default: return nullptr;
+    }
+}
+
 bool AbstractNotationPaintView::shortcutOverride(QKeyEvent* event)
 {
     if (isInited()) {
         if (m_inputController->shortcutOverrideEvent(event)) {
             return true;
         }
-        return isPlaybackScrubShortcut(event) || isRepriseKeypadTie(event) || repriseAccidentalStepNote(event)
+        return (speedyEntryActive() && hasActiveFocus() && !notationInteraction()->isTextEditingStarted() && (isSpeedyEntryDirectCommand(event) || speedyEntryAction(event)))
+               || isPlaybackScrubShortcut(event) || repriseAccidentalStepNote(event)
+               || isRepriseKeypadTie(event)
                || (canRouteRepriseEscape(event) && (m_repriseEscapeHeld || m_repriseToolModel->canCancel()));
     }
 
@@ -2049,6 +2325,64 @@ void AbstractNotationPaintView::keyPressEvent(QKeyEvent* event)
         }
         event->accept();
         return;
+    }
+
+    if (speedyEntryActive() && hasActiveFocus() && !notationInteraction()->isTextEditingStarted()) {
+        if (isSpeedyEntryDirectCommand(event)) {
+            const auto input = notationNoteInput();
+            const auto& state = input->state();
+            const int pitch = speedyKeyboardPitch(event);
+            if (event->key() == Qt::Key_Backspace) {
+                if (state.isValid() && !event->isAutoRepeat()) {
+                    deleteSpeedyPitch(notation(), state);
+                }
+            } else if (state.isValid() && (event->key() == Qt::Key_Up || event->key() == Qt::Key_Down)) {
+                const auto staffIndex = state.staffIdx();
+                if (event->key() == Qt::Key_Up && staffIndex > 0) {
+                    input->setCurrentTrack((staffIndex - 1) * engraving::VOICES + state.voice());
+                } else if (event->key() == Qt::Key_Down && staffIndex + 1 < state.staff()->score()->nstaves()) {
+                    input->setCurrentTrack((staffIndex + 1) * engraving::VOICES + state.voice());
+                }
+            } else if (state.isValid() && (event->key() == Qt::Key_Apostrophe || event->key() == Qt::Key_QuoteDbl)) {
+                const auto modifiers = event->modifiers() & ~Qt::KeypadModifier;
+                const auto voice = state.voice();
+                input->setCurrentVoice(modifiers == Qt::ShiftModifier
+                                       ? (voice + 1) % engraving::VOICES
+                                       : (voice == 0 ? 1 : 0));
+            } else if (pitch >= 0 && state.isValid()) {
+                engraving::NoteVal note(pitch + 12 * m_speedyOctaveOffset);
+                note.tpc1 = note.tpc2 = engraving::pitch2tpc(note.pitch, engraving::Key::C, engraving::Prefer::NEAREST);
+                input->setRestMode(false);
+                input->setInputNotes({ note });
+            } else if (pitch <= -2) {
+                m_speedyOctaveOffset = pitch == -2 ? -1 : (pitch == -4 ? 1 : 0);
+            } else if (state.isValid() && !state.notes().empty() && !event->isAutoRepeat()) {
+                const auto* staff = state.staff();
+                const auto& note = state.notes().front();
+                const int line = engraving::noteValToLine(note, staff, state.tick());
+                engraving::NoteInputParams params;
+                params.step = engraving::absStep(line, staff->clef(state.tick()));
+                input->addNote(params, NoteAddingMode::CurrentChord);
+            }
+            event->accept();
+            return;
+        }
+
+        if (const char* action = speedyEntryAction(event)) {
+            if (!event->isAutoRepeat() || event->key() == Qt::Key_BracketLeft || event->key() == Qt::Key_BracketRight) {
+                const auto modifiers = event->modifiers() & ~Qt::KeypadModifier;
+                if (modifiers == (Qt::ControlModifier | Qt::ShiftModifier)) {
+                    const auto input = notationNoteInput();
+                    input->setRestMode(true);
+                    dispatcher()->dispatch(action);
+                    input->setRestMode(false);
+                } else if (!changeSpeedyChordDuration(notation(), notationNoteInput()->state().cr(), action)) {
+                    dispatcher()->dispatch(action);
+                }
+            }
+            event->accept();
+            return;
+        }
     }
 
     if (isRepriseKeypadTie(event)) {

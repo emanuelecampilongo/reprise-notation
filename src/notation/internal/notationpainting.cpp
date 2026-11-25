@@ -183,9 +183,10 @@ void NotationPainting::paintPageSheet(Painter* painter, const Page* page, const 
     }
 }
 
-void NotationPainting::paintView(Painter* painter, const RectF& frameRect, bool isPrinting)
+void NotationPainting::paintView(Painter* painter, const RectF& frameRect, bool isPrinting, int visibleVoice)
 {
     Options opt;
+    opt.visibleVoice = visibleVoice;
     opt.isSetViewport = false;
     opt.isMultiPage = true;
     opt.frameRect = frameRect;

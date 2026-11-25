@@ -74,6 +74,8 @@ class AbstractNotationPaintView : public muse::uicomponents::QuickPaintedView, p
     Q_PROPERTY(RepriseToolModel* repriseToolModel READ repriseToolModel WRITE setRepriseToolModel NOTIFY repriseToolModelChanged)
 
     Q_PROPERTY(bool noteInputActive READ isNoteEnterMode NOTIFY noteInputActiveChanged)
+    Q_PROPERTY(bool speedyEntryActive READ speedyEntryActive NOTIFY noteInputActiveChanged)
+    Q_PROPERTY(bool showOnlyActiveVoice READ showOnlyActiveVoice WRITE setShowOnlyActiveVoice NOTIFY showOnlyActiveVoiceChanged)
     Q_PROPERTY(QString repriseViewMode READ repriseViewMode NOTIFY repriseViewModeChanged)
 
     muse::GlobalInject<INotationConfiguration> notationConfiguration;
@@ -96,6 +98,9 @@ public:
 
     QString repriseViewMode() const;
     Q_INVOKABLE void selectRepriseTool(int tool);
+    Q_INVOKABLE void toggleSpeedyEntry();
+    bool showOnlyActiveVoice() const { return m_showOnlyActiveVoice; }
+    void setShowOnlyActiveVoice(bool enabled);
     Q_INVOKABLE bool requestRepriseViewMode(const QString& actionCode);
 
     Q_INVOKABLE void load();
@@ -136,6 +141,7 @@ public:
     Q_INVOKABLE void pinchToZoom(qreal scaleFactor, const QPointF& pos);
 
     bool isNoteEnterMode() const override;
+    bool speedyEntryActive() const;
     bool usesRepriseRangeCopy() const override;
     bool usesRepriseEditing() const override;
 
@@ -174,6 +180,7 @@ public:
 signals:
     void repriseToolModelChanged();
     void noteInputActiveChanged();
+    void showOnlyActiveVoiceChanged();
     void repriseViewModeChanged();
     void showContextMenuRequested(int elementType, const QPointF& viewPos);
     void hideContextMenuRequested();
@@ -327,6 +334,9 @@ private:
 
     QPointer<RepriseToolModel> m_repriseToolModel;
     bool m_repriseEscapeHeld = false;
+    bool m_speedyEntrySelected = false;
+    bool m_showOnlyActiveVoice = false;
+    int m_speedyOctaveOffset = 0;
     bool m_playbackScrubHeld = false;
     int m_playbackScrubTick = -1;
     reprise::PointerSequence m_reprisePointer;

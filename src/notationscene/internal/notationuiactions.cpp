@@ -3048,6 +3048,12 @@ SymbolId NotationUiActions::actionArticulationSymbolId(const ActionCode& actionC
     return symbolId;
 }
 
+bool NotationUiActions::isNoteInputBarActionVisible(const muse::actions::ActionCode& action)
+{
+    return qgetenv("REPRISE_TOOLS") == "0"
+           || (action != "note-input-by-note-name" && action != "note-input-by-duration");
+}
+
 const muse::ui::ToolConfig& NotationUiActions::defaultNoteInputBarConfig()
 {
     static ToolConfig config;
@@ -3102,8 +3108,8 @@ const muse::ui::ToolConfig& NotationUiActions::defaultNoteInputBarConfig()
             { "", true },
             { "voice-1", true },
             { "voice-2", true },
-            { "voice-3", false },
-            { "voice-4", false }
+            { "voice-3", qgetenv("REPRISE_TOOLS") != "0" },
+            { "voice-4", qgetenv("REPRISE_TOOLS") != "0" }
         };
     }
     return config;

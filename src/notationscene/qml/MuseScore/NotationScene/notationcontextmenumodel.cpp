@@ -22,6 +22,7 @@
 #include "notationcontextmenumodel.h"
 
 #include "types/translatablestring.h"
+#include "appshell/appshelltypes.h"
 
 #include "ui/view/iconcodes.h"
 
@@ -34,6 +35,18 @@ using namespace mu::notation;
 using namespace muse;
 using namespace muse::uicomponents;
 using namespace muse::actions;
+
+static const QString OPEN_OBJECT_PROPERTIES_ID = QStringLiteral("open-object-properties");
+
+void NotationContextMenuModel::handleMenuItem(const QString& itemId)
+{
+    if (itemId == OPEN_OBJECT_PROPERTIES_ID) {
+        dispatcher()->dispatch("dock-set-open", muse::actions::ActionData::make_arg2<QString, bool>(mu::appshell::INSPECTOR_PANEL_NAME, true));
+        return;
+    }
+
+    AbstractMenuModel::handleMenuItem(itemId);
+}
 
 void NotationContextMenuModel::loadItems(int elementType)
 {
@@ -130,6 +143,9 @@ MenuItemList NotationContextMenuModel::makeMeasureItems()
         items << makeMenuItem("customize-kit");
     }
 
+    items << makeMenuItem("play-from-selection");
+    items << makeMenuItem("transpose");
+    items << makeSeparator();
     items << makeMenuItem("staff-properties");
     items << makeSeparator();
     items << makeMenu(TranslatableString("notation", "Insert measures"), makeInsertMeasuresItems());
@@ -278,6 +294,11 @@ MenuItemList NotationContextMenuModel::makeElementItems()
 
     const EngravingItem* element = currentElement();
 
+    if (element && (element->isNote() || element->isChordRest())) {
+        items << makeMenuItem("play-from-selection");
+        items << makeMenuItem("transpose");
+    }
+
     if (element && element->isEditable()) {
         items << makeSeparator();
         items << makeMenuItem("edit-element");
@@ -285,6 +306,11 @@ MenuItemList NotationContextMenuModel::makeElementItems()
 
     items << makeSeparator()
           << makeEditStyle(element);
+    if (element) {
+        MenuItem* properties = makeMenuItem("inspector");
+        properties->setId(OPEN_OBJECT_PROPERTIES_ID);
+        items << properties;
+    }
 
     return items;
 }
@@ -420,6 +446,11 @@ MenuItemList NotationContextMenuModel::makeTextItems()
 
     items << makeSeparator()
           << makeEditStyle(element);
+    if (element) {
+        MenuItem* properties = makeMenuItem("inspector");
+        properties->setId(OPEN_OBJECT_PROPERTIES_ID);
+        items << properties;
+    }
 
     return items;
 }

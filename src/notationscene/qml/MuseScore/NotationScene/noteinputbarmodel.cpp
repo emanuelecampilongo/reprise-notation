@@ -112,7 +112,7 @@ void NoteInputBarModel::load()
 
     int section = 0;
     for (const ToolConfig::Item& citem : noteInputConfig.items) {
-        if (!citem.show) {
+        if (!citem.show || !NotationUiActions::isNoteInputBarActionVisible(citem.action)) {
             continue;
         }
 

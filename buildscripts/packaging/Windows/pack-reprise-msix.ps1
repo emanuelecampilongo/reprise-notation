@@ -96,6 +96,12 @@ try {
         }
 
     Copy-Item -LiteralPath (Join-Path $repository 'share\icons\AppIcon\RepriseAppIcon.ico') -Destination (Join-Path $stage 'Assets')
+    foreach ($extension in @('mscz', 'mscx')) {
+        $iconName = (Get-Culture).TextInfo.ToTitleCase($extension) + 'Icon'
+        $source = Join-Path $repository "share\icons\$iconName\MS4_${iconName}_512x512.png"
+        Copy-Item -LiteralPath $source -Destination (Join-Path $stage "Assets\$extension.png")
+    }
+
     Add-Type -AssemblyName System.Drawing
     $icon = [Drawing.Image]::FromFile((Join-Path $repository 'share\icons\AppIcon\RepriseAppIcon_128x128.png'))
     try {

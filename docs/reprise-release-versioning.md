@@ -2,7 +2,7 @@
 
 ## Public version
 
-- Current project version: **0.1.1** (without alpha/beta suffix).
+- Current project version: **0.1.2** (without alpha/beta suffix).
 - Source of truth: `REPRISE_APP_VERSION` in root `version.cmake`.
 - It is exported to C++ by `src/framework/cmake/muse_framework_config.h.in`.
 - The splash screen and the Reprise About dialog display this public version.
@@ -51,4 +51,4 @@ No new Home image and no welcome-screen artwork are required.
 
 ## Microsoft Store package version
 
-Reprise Notation 0.1.1 uses MSIX version 1.1.1.0. Keep the Store package version increasing and leave its fourth component at zero.
+Reprise Notation 0.1.2 uses MSIX version 1.1.1.0. Keep the Store package version increasing and leave its fourth component at zero.
