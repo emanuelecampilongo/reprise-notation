@@ -2,7 +2,7 @@
 
 ## Public version
 
-- Current project version: **0.1.3** (without alpha/beta suffix).
+- Current project version: **0.1.4** (without alpha/beta suffix).
 - Source of truth: `REPRISE_APP_VERSION` in root `version.cmake`.
 - It is exported to C++ by `src/framework/cmake/muse_framework_config.h.in`.
 - The splash screen and the Reprise About dialog display this public version.
@@ -53,6 +53,6 @@ No new Home image and no welcome-screen artwork are required.
 
 ## Microsoft Store package version
 
-Reprise Notation 0.1.3 sets MSIX version `1.1.3.0` in the source manifest. The packaging script can override that value. Use the package in Partner Center to confirm the version actually distributed. Keep the Store package version increasing and leave its fourth component at zero.
+Reprise Notation 0.1.4 sets MSIX version `1.1.4.0` in the source manifest. The packaging script can override that value. Use the package in Partner Center to confirm the version actually distributed. Keep the Store package version increasing and leave its fourth component at zero.
 
 For each Store submission, record the Reprise version, the actual MSIX version, the package SHA-256 before submission, and the exact public source commit. Verify that the Store listing gives users a clear route to the corresponding source and applicable notices. Keep the record with the release materials.
