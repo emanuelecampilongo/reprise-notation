@@ -70,7 +70,11 @@ TEST_F(Global_UriTests, Uri_LocalFile)
 {
     //! GIVEN Local file path
 
+#ifdef _WIN32
+    io::path_t originPath = "C:/Users/user/some/path/to/file name.ext";
+#else
     io::path_t originPath = "/home/user/some/path/to/file name.ext";
+#endif
 
     Uri uri1 = Uri::fromLocalFile(originPath);
     io::path_t path1 = uri1.toLocalFile();

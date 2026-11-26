@@ -21,6 +21,9 @@
  */
 
 #include <gtest/gtest.h>
+#include <memory>
+
+#include "engraving/dom/box.h"
 
 #include "engraving/engravingerrors.h"
 #include "engraving/dom/masterscore.h"
@@ -68,7 +71,7 @@ public:
     void musicXmlMscxExportTestRefInvisibleElements(const char* file);
     void musicXmlReadTestCompr(const char* file);
     void musicXmlReadWriteTestCompr(const char* file);
-    void musicXmlImportTestRef(const char* file);
+    void musicXmlImportTestRef(const char* file, bool compareTitleBoxMetrics = false);
 
     void setValue(const std::string& key, const Val& value);
 
@@ -350,7 +353,7 @@ void MusicXml_Tests::musicXmlReadWriteTestCompr(const char* file)
 //   and verify against a MuseScore mscx reference file
 //---------------------------------------------------------
 
-void MusicXml_Tests::musicXmlImportTestRef(const char* file)
+void MusicXml_Tests::musicXmlImportTestRef(const char* file, bool compareTitleBoxMetrics)
 {
     MScore::debugMode = false;
     setValue(PREF_EXPORT_MUSICXML_EXPORTBREAKS, Val(IMusicXmlConfiguration::MusicXmlExportBreaksType::Manual));
@@ -362,6 +365,19 @@ void MusicXml_Tests::musicXmlImportTestRef(const char* file)
     ASSERT_TRUE(score);
     fixupScore(score);
     score->doLayout();
+    if (compareTitleBoxMetrics) {
+        const std::unique_ptr<MasterScore> reference(readScore(XML_IO_DATA_DIR + fileName + u"_ref.mscx"));
+        ASSERT_TRUE(reference);
+        ASSERT_TRUE(score->first() && score->first()->isVBox());
+        ASSERT_TRUE(reference->first() && reference->first()->isVBox());
+        VBox* titleBox = toVBox(score->first());
+        const VBox* referenceBox = toVBox(reference->first());
+        // Font-derived metrics vary slightly between platforms. Bound only the
+        // title box height (0.002 spatium, below 0.004 mm at the default size),
+        // then retain the exact comparison for all text, styles and music data.
+        EXPECT_NEAR(titleBox->boxHeight().val(), referenceBox->boxHeight().val(), 0.002);
+        titleBox->setBoxHeight(referenceBox->boxHeight());
+    }
     EXPECT_TRUE(ScoreComp::saveCompareScore(score, fileName + u".mscx", XML_IO_DATA_DIR + fileName + u"_ref.mscx"));
     delete score;
 }
@@ -775,10 +791,10 @@ TEST_F(MusicXml_Tests, incorrectStaffNumber2) {
     musicXmlIoTestRef("testIncorrectStaffNumber2");
 }
 TEST_F(MusicXml_Tests, inferredCredits1) {
-    musicXmlImportTestRef("testInferredCredits1");
+    musicXmlImportTestRef("testInferredCredits1", true);
 }
 TEST_F(MusicXml_Tests, inferredCredits2) {
-    musicXmlImportTestRef("testInferredCredits2");
+    musicXmlImportTestRef("testInferredCredits2", true);
 }
 TEST_F(MusicXml_Tests, inferCodaII) {
     musicXmlImportTestRef("testInferCodaII");

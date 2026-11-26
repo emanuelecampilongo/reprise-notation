@@ -320,7 +320,7 @@
         <eid>s_s</eid>
         <voice>
           <PlayTechAnnotation>
-            <playTechType>mute</playTechType>
+            <playTechType>open</playTechType>
             <eid>t_t</eid>
             <text>senza sord</text>
             </PlayTechAnnotation>

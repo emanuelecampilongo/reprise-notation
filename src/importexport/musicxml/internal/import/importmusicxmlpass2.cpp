@@ -5008,7 +5008,7 @@ PlayingTechniqueType MusicXmlParserDirection::getPlayingTechnique() const
     }
 
     const String plainWords = MScoreTextToMusicXml::toPlainText(m_wordsText.simplified());
-    static const std::unordered_map<muse::String, PlayingTechniqueType> textToPlayTechniqueType {
+    static const std::vector<std::pair<muse::String, PlayingTechniqueType> > textToPlayTechniqueType {
         { u"natural", PlayingTechniqueType::Natural },
         { u"normal", PlayingTechniqueType::Natural },
         { u"ord", PlayingTechniqueType::Natural },
@@ -5036,13 +5036,18 @@ PlayingTechniqueType MusicXmlParserDirection::getPlayingTechnique() const
         { u"jazz", PlayingTechniqueType::JazzTone },
     };
 
-    for (auto& technique : textToPlayTechniqueType) {
-        if (plainWords.contains(technique.first)) {
-            return technique.second;
+    // Prefer the most specific phrase: "without mute" must win over "mute",
+    // and "senza sord" over "sord", independently of the standard library.
+    PlayingTechniqueType result = PlayingTechniqueType::Undefined;
+    size_t longestMatch = 0;
+    for (const auto& technique : textToPlayTechniqueType) {
+        if (technique.first.size() > longestMatch && plainWords.contains(technique.first)) {
+            longestMatch = technique.first.size();
+            result = technique.second;
         }
     }
 
-    return PlayingTechniqueType::Undefined;
+    return result;
 }
 
 void MusicXmlParserDirection::handleDrumInstrument(bool isPerc, Fraction tick) const
