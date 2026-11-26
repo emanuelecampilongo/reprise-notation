@@ -41,7 +41,7 @@ Export the score as **MusicXML** in Finale, then open it in Reprise Notation. Re
 
 ## Availability and feedback
 
-The Windows release is planned for the Microsoft Store. [Project website](https://emanuelecampilongo.com/software/reprise-notation)
+Get Reprise Notation for Windows from the [Microsoft Store](https://apps.microsoft.com/detail/9p6v1l676p93). See the [project website](https://emanuelecampilongo.com/software/reprise-notation) for more information.
 
 Send bug reports, feature suggestions, and proposed code changes to [info@emanuelecampilongo.com](mailto:info@emanuelecampilongo.com). To copy the address from the app, open **Help → Feedback…**. See [Contributing to Reprise Notation](CONTRIBUTING.md) for what to include and how to build the app.
 

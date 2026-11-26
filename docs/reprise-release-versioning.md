@@ -10,7 +10,9 @@
 
 ## MuseScore compatibility layer
 
-The upstream compatibility version comes from `MUSE_APP_VERSION` (currently 4.7.5).
+The upstream compatibility version comes from `MUSE_APP_VERSION`. The MuseScore Studio baseline is [v4.7.5](https://github.com/musescore/MuseScore/tree/v4.7.5), commit `3654226c2e99289916916953a98e585a3d3b315a`.
+
+For the next upstream update, start an integration branch from Reprise `main` and compare the old and new MuseScore tags. Apply that upstream delta against Reprise, review overlaps with Reprise changes, then run the Windows build and regression tests. Record the new upstream tag and commit after validation. Use the tag comparison as the starting point because the public Reprise history begins with a source snapshot.
 Windows builds produce `Reprise Notation.exe`. The MSIX manifest and local signing script
 use the same filename.
 
@@ -51,4 +53,6 @@ No new Home image and no welcome-screen artwork are required.
 
 ## Microsoft Store package version
 
-Reprise Notation 0.1.3 uses MSIX version 1.1.1.0. Keep the Store package version increasing and leave its fourth component at zero.
+Reprise Notation 0.1.3 sets MSIX version `1.1.3.0` in the source manifest. The packaging script can override that value. Use the package in Partner Center to confirm the version actually distributed. Keep the Store package version increasing and leave its fourth component at zero.
+
+For each Store submission, record the Reprise version, the actual MSIX version, the package SHA-256 before submission, and the exact public source commit. Verify that the Store listing gives users a clear route to the corresponding source and applicable notices. Keep the record with the release materials.
